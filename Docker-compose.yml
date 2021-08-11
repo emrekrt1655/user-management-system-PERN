@@ -15,7 +15,7 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-    services:
+
   server:
     build: ./server
     command: npm start 
@@ -42,6 +42,9 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     command: npm start
+    networks:
+    clarusnet:
+        driver: overlay
 
 
 
