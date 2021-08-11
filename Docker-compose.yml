@@ -1,0 +1,48 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dsvgh6083..}
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+    services:
+  server:
+    build: ./server
+    command: npm start 
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+    clarusnet:
+        driver: overlay
+  
+  client:
+    container_name: client
+    build: ./client
+    volumes:
+      - './:/app'
+      - '/app/node_modules'
+    ports:
+      - 3000:3000
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm start
+
+
+
+
